@@ -2,7 +2,7 @@ package com.ochprince.design_patterns.creational_patterns.simple_factory_pattern
 
 import org.junit.Test;
 
-public class FoodFactoryTest {
+public class SimpleFactoryTest {
 
 	@Test
 	public void testGetFood() {
