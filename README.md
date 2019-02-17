@@ -1,4 +1,4 @@
 # java_learning
-*design patterns instantiation
+* design patterns instantiation
 
-*stream or other practice
+* other java practice
