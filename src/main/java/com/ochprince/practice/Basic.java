@@ -1,6 +1,12 @@
 package com.ochprince.practice;
 
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * basic programming structure
@@ -90,7 +96,7 @@ public class Basic {
 
 		private static void printMaximum() {
 			System.out.println("Double.MAX_VALUE = " + Double.MAX_VALUE);
-			System.out.println("Math.nextUp(Double.MAX_VALUE) = " + Math.nextUp(Double.MAX_VALUE));//the infinity
+			System.out.println("Math.nextDown(Double.POSITIVE_INFINITY) = " + Math.nextDown(Double.POSITIVE_INFINITY));
 			System.out.println("(1.0/0.0) = " + (1.0 / 0.0));
 		}
 	}
@@ -117,19 +123,77 @@ public class Basic {
 	 */
 	static class Factorial {
 		public static void main(String[] args) {
-			BigInteger res = BigInteger.ONE;
 			BigInteger n = BigInteger.valueOf(1000L);
-			BigInteger factorial = getFactorial(n, res);
+			BigInteger factorial = getFactorial(n);
 			System.out.println("factorial = " + factorial);
 		}
 
-		private static BigInteger getFactorial(BigInteger n, BigInteger res) {
-			if (n.compareTo(BigInteger.ONE) > 0) {
-				res = n.multiply(res);
-				return getFactorial(n.subtract(BigInteger.ONE), res);
+		private static BigInteger getFactorial(BigInteger n) {
+			BigInteger subtract = n.subtract(BigInteger.ONE);
+			if (subtract.compareTo(BigInteger.ONE) > 0) {
+				return n.multiply(getFactorial(subtract));
 			} else {
-				return res;
+				return n.multiply(subtract);
 			}
+		}
+	}
+
+	/**
+	 * calculate two short number between 0 to 65535
+	 */
+	static class ShortType {
+		public static void main(String[] args) {
+			Scanner scanner = new Scanner(System.in);
+			System.out.println(" please enter first short (0 ~ 65535): ");
+			boolean inputValid = false;
+			if (scanner.hasNextInt()) {
+				short first = (short) scanner.nextInt();
+				System.out.println(" please enter second short (0 ~ 65535): ");
+				if (scanner.hasNextInt()) {
+					short second = (short) scanner.nextInt();
+					inputValid = true;
+					printCalculate(first, second);
+				}
+			}
+			if (!inputValid) {
+				System.out.println(" input data failed! ");
+			}
+		}
+
+		private static void printCalculate(short num1, short num2) {
+			int i1 = Short.toUnsignedInt(num1) + Short.toUnsignedInt(num2);
+			int i2 = Short.toUnsignedInt(num1) - Short.toUnsignedInt(num2);
+			int i3 = Short.toUnsignedInt(num1) * Short.toUnsignedInt(num2);
+			int i4 = Short.toUnsignedInt(num1) / Short.toUnsignedInt(num2);
+			int i5 = Short.toUnsignedInt(num1) % Short.toUnsignedInt(num2);
+
+			System.out.println(Short.toUnsignedInt(num1) + "+" + Short.toUnsignedInt(num2) + "=" + i1);
+			System.out.println(Short.toUnsignedInt(num1) + "-" + Short.toUnsignedInt(num2) + "=" + i2);
+			System.out.println(Short.toUnsignedInt(num1) + "*" + Short.toUnsignedInt(num2) + "=" + i3);
+			System.out.println(Short.toUnsignedInt(num1) + "/" + Short.toUnsignedInt(num2) + "=" + i4);
+			System.out.println(Short.toUnsignedInt(num1) + "%" + Short.toUnsignedInt(num2) + "=" + i5);
+		}
+	}
+
+	/**
+	 * give a random set of lottery Numbers
+	 */
+	static class Lottery {
+		public static void main(String[] args) {
+			Random random = new Random();
+			printLotteryNumbers(random);
+		}
+
+		private static void printLotteryNumbers(Random random) {
+			List<Integer> redLs = Stream.iterate(1, i -> i + 1).limit(33).collect(Collectors.toList());
+			List<Integer> blueLs = Stream.iterate(1, i -> i + 1).limit(16).collect(Collectors.toList());
+			int[] redChoose = new int[6];
+			for (int i = 0; i < 6; i++) {
+				int randomIndex = random.nextInt(33 - i);
+				redChoose[i] = redLs.remove(randomIndex);
+			}
+			Arrays.sort(redChoose);
+			System.out.println("redChoose = " + Arrays.toString(redChoose) + ", blueChoose = " + blueLs.remove(random.nextInt(16)));
 		}
 	}
 
