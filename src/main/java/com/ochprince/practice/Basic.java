@@ -1,10 +1,9 @@
 package com.ochprince.practice;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -194,6 +193,84 @@ public class Basic {
 			}
 			Arrays.sort(redChoose);
 			System.out.println("redChoose = " + Arrays.toString(redChoose) + ", blueChoose = " + blueLs.remove(random.nextInt(16)));
+		}
+	}
+
+	/**
+	 * check if the input is magic square
+	 */
+	static class MagicSquare {
+		public static void main(String[] args) {
+
+			System.out.println(" please enter cube separate by whitespace and newline, the empty line means end of input: ");
+			try {
+				List<List<Integer>> input = getInput();
+				List<List<Integer>> reverse = getReverse(input);
+				List<Integer> allSums = input.stream()
+						.map(list -> list.stream().mapToInt(Integer::intValue).sum())
+						.collect(Collectors.toList());
+				allSums.addAll(reverse.stream()
+						.map(list -> list.stream().mapToInt(Integer::intValue).sum())
+						.collect(Collectors.toList()));
+				int sum = 0;
+				int sum1 = 0;
+				for (int i = 0; i < input.size(); i++) {
+					sum += input.get(i).get(i);
+					sum1 += reverse.get(i).get(i);
+				}
+				allSums.add(sum);
+				allSums.add(sum1);
+				if (allSums.stream().distinct().count() != 1) {
+					System.out.println(" input not cube! ");
+				} else {
+					System.out.println(" input is cube! ");
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+
+		private static List<List<Integer>> getReverse(List<List<Integer>> input) {
+			List<List<Integer>> result = new ArrayList<>();
+			for (int i = 0; i < input.size(); i++) {
+				List<Integer> aline = new ArrayList<>();
+				for (int j = 0; j < input.get(i).size(); j++) {
+					aline.add(input.get(j).get(i));
+				}
+				result.add(aline);
+			}
+			return result;
+		}
+
+		private static List<List<Integer>> getInput() throws Exception {
+			List<List<Integer>> inputLs = new ArrayList<>();
+			int col = 0;
+			Scanner scanner = new Scanner(System.in);
+			try {
+				while (scanner.hasNext()) {
+					String next = scanner.nextLine();
+					if (StringUtils.isBlank(next)) {
+						break;
+					}
+					String[] intSplits = next.split("\\s+");
+
+					List<Integer> aline = Arrays.stream(intSplits)
+							.map(Integer::valueOf)
+							.collect(Collectors.toList());
+					if (col == 0) {
+						col = aline.size();
+					} else if (col != aline.size()) {
+						throw new Exception();
+					}
+					inputLs.add(aline);
+				}
+				if (inputLs.size() != col) {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				throw new Exception(" input not cube! ", e);
+			}
+			return inputLs;
 		}
 	}
 
