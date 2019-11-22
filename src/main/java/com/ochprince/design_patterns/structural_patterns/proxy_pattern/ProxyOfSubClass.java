@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 public class ProxyOfSubClass {
 
     public static void main(String[] args) {
-        User instance = (User) getProxyInstance(new User());
+        User instance = (User) getProxyInstance(new User("jason"));
         instance.print();
     }
 
@@ -36,14 +36,20 @@ public class ProxyOfSubClass {
                 Enhancer enhancer = new Enhancer();
                 enhancer.setSuperclass(obj.getClass());
                 enhancer.setCallback(this);
-                return enhancer.create();
+                return enhancer.create(new Class[]{String.class}, new Object[]{"jason"});
             }
         }.getProxy();
     }
 
     public static class User {
+        private final String name;
+
+        public User(String name) {
+            this.name = name;
+        }
+
         void print() {
-            System.out.println("My name is ochPrince");
+            System.out.println("My name is " + name);
         }
     }
 }
