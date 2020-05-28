@@ -12,6 +12,10 @@
 
 # Idea file
 .iml
+.idea
+.gradle
+target
+out
 
 # Package Files #
 *.jar

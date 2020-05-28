@@ -1,0 +1,84 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+sourceCompatibility = 1.8
+group = 'com.colasoft.csf'
+
+def lastVersion = "1.0.0.RELEASE"
+def csfVersion = version = "1.4.0.4326-SNAPSHOT"
+def artifactId = "java_learning"
+
+ext.lastJarName = artifactId + "-" + lastVersion + ".jar"
+ext.jarName = artifactId + "-" + "$csfVersion" + ".jar"
+
+buildscript {
+    ext.springBootVersion = "2.3.0.RELEASE"
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring/' }
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/spring/' }
+    mavenLocal()
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourceJar
+	archives javadocJar
+    archives jar
+}
+
+dependencies {
+	compile('org.springframework:spring-core')
+    compile 'commons-io:commons-io:2.6'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'com.alibaba:fastjson:1.2.56'
+    testCompile 'junit:junit:4.1'
+}
+
+jar {
+    enabled = true
+    manifest {
+        attributes 'Manifest-Version': "$csfVersion"
+        attributes 'Build-Time': new Date()
+        attributes 'Built-With': 'gradle-4.2.1'
+        attributes 'Built-On': 'ISDV161716L.local/172.16.3.14'
+        attributes 'Built-By': 'shilong.jiang-PC'
+        attributes 'Java-Version': '1.8.0_131'
+        attributes 'Application-Title': 'java_learning'
+    }
+}
+
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet "UTF-8"
+        author true
+        version true
+    }
+}
+
